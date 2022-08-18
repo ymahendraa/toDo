@@ -155,6 +155,7 @@ const DetailActivity = () => {
               boxShadow={"dark-lg"}
               borderRadius="8px"
               w={"100%"}
+              data-cy="modal-information"
             >
               <Icon as={AiOutlineInfoCircle} color={"#00A790"} w={5} h={5} />
               <Text>{item.title} berhasil dihapus</Text>
@@ -169,7 +170,7 @@ const DetailActivity = () => {
 
   return (
     isSuccess && (
-      <div data-cy="detail-state-activity">
+      <div data-cy="activity-item">
         <Header />
         <VStack
           width={"100%"}
@@ -203,9 +204,10 @@ const DetailActivity = () => {
                   onChange={actNameHandler}
                   onBlur={submitActNameHandler}
                   autoFocus
+                  data-cy="todo-title"
                 />
               ) : (
-                <Heading onClick={() => setIsClicked(!isClicked)}>
+                <Heading onClick={() => setIsClicked(!isClicked)} data-cy="todo-title"  >
                   {actName.title}
                 </Heading>
               )}
@@ -226,7 +228,7 @@ const DetailActivity = () => {
               gap={"1rem"}
             >
               <Menu>
-                <MenuButton>
+                <MenuButton data-cy="todo-sort-button">
                   <Flex
                     borderRadius={"full"}
                     w={"3rem"}
@@ -256,6 +258,7 @@ const DetailActivity = () => {
                   <MenuItem
                     onClick={() => setFlagFilter("Terlama")}
                     isDisabled={flagFilter === "Terlama"}
+                    data-cy="sort-selection"
                   >
                     <Icon as={BsSortDown} color={"#16ABF8"} w={5} />
                     <span>Terlama</span>
@@ -263,6 +266,7 @@ const DetailActivity = () => {
                   <MenuItem
                     onClick={() => setFlagFilter("A-Z")}
                     isDisabled={flagFilter === "A-Z"}
+                    data-cy="sort-selection"
                   >
                     <Icon as={AiOutlineSortAscending} color={"#16ABF8"} w={5} />
                     <span>A-Z </span>
@@ -270,6 +274,7 @@ const DetailActivity = () => {
                   <MenuItem
                     onClick={() => setFlagFilter("Z-A")}
                     isDisabled={flagFilter === "Z-A"}
+                    data-cy="sort-selection"
                   >
                     <Icon
                       as={AiOutlineSortDescending}
@@ -281,6 +286,7 @@ const DetailActivity = () => {
                   <MenuItem
                     onClick={() => setFlagFilter("Belum Selesai")}
                     isDisabled={flagFilter === "Belum Selesai"}
+                    data-cy="sort-selection"
                   >
                     <Icon as={RiArrowUpDownLine} color={"#16ABF8"} w={5} />
                     <span>Belum Selesai</span>
@@ -296,6 +302,7 @@ const DetailActivity = () => {
                 borderRadius="2rem"
                 cursor={"pointer"}
                 onClick={modalAddHandler}
+                data-cy="todo-add-button"
               >
                 Tambah
               </Button>
@@ -306,7 +313,7 @@ const DetailActivity = () => {
             data.todo_items.map((todos) => (
               <DetailActList
                 // onEdit={modalEditHandler}
-                data-cy="detail-list"
+                data-cy="modal-delete-confirm-button"
                 swal={swalHandler}
                 item={todos}
                 key={todos.id}

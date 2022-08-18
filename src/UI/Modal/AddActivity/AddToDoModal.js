@@ -68,13 +68,14 @@ const AddToDoModal = ({ onClose, isOpen, id }) => {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel fontSize={"xs"}>NAMA LIST ITEM</FormLabel>
-              <Input placeholder="Tambahkan nama Activity" onChange={(event) => setToDoName(event.target.value)}/>
+              <Input placeholder="Tambahkan nama Activity" onChange={(event) => setToDoName(event.target.value)} data-cy="modal-add-name-input"/>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel fontSize={"xs"}>PRIORITY</FormLabel>
               <Select
                 // placeholder={e[0].label}
+                data-cy="modal-add-priority-dropdown"
                 components={{
                     IndicatorSeparator: () => null
                   }}
@@ -101,6 +102,7 @@ const AddToDoModal = ({ onClose, isOpen, id }) => {
               onClick={
                 submitHandler
               }
+              data-cy="modal-add-save-button"
             >
               Tambah
             </Button>

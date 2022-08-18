@@ -102,7 +102,7 @@ const HomeScreen = () => {
 
   const { data, isError, isLoading, isFetching, isSuccess } = useQuery(
     "activities",
-    getDataActivities
+    getDataActivities,{refetchInterval:500}
   );
 
   const {mutate:mutateCreate, isLoading:isLoadingCreate} = useMutation(postNewActivities, {

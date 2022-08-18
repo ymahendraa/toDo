@@ -53,6 +53,7 @@ const DetailActList = (props) => {
             colorScheme={"twitter"}
             onChange={isActiveHandler}
             isChecked={!datas.is_active}
+            data-cy="todo-item-checkbox"
           />
           <Icon as={GoPrimitiveDot} color={"red"} w={7} h={7} />
           <Text fontSize={"lg"} as={!datas.is_active && "del"}>
@@ -75,6 +76,7 @@ const DetailActList = (props) => {
           color={"blackAlpha.500"}
           cursor={"pointer"}
           onClick={()=>swal(item)}
+          data-cy="todo-item-delete-button"
         />
       </HStack>
     </div>

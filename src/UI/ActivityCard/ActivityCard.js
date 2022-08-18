@@ -26,12 +26,12 @@ const ActivityCard = ({item, deleteItem}) => {
           alignItems={"start"}
           cursor={'pointer'} onClick={() => navigate(`/detail/${item.id}`)}
         >
-          <Text fontWeight={"bold"} fontSize={"xl"}>
+          <Text fontWeight={"bold"} fontSize={"xl"} data-cy="activity-item-title">
             {item.title}
           </Text>
         </Box>
         <HStack gap={"2rem"}>
-          <Text color={"blackAlpha.700"} cursor={"auto"}>
+          <Text color={"blackAlpha.700"} cursor={"auto"} data-cy="activity-item-date">
             {moment(item.created_at).format("DD MMMM YYYY")}
           </Text>
           <Icon
@@ -41,6 +41,7 @@ const ActivityCard = ({item, deleteItem}) => {
             color={"blackAlpha.500"}
             cursor={"pointer"}
             onClick={handleDelete}
+            data-cy="activity-item-delete-button"
           />
         </HStack>
       </Box>
