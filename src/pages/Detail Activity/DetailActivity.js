@@ -62,23 +62,19 @@ const DetailActivity = () => {
   const [selectedData, setSelectedData] = useState({});
   const toast = useToast();
   let { id } = useParams();
-  const [data, setData] = useState({});
 
-  useEffect(() => {
-    const getDetailAct = async () => {
-      const data = await services["getDetailActivity"](id)
-        .then(async (response) => {
-          console.log(response.data);
-          setData(response.data);
-        })
-        .catch(async (err) => {
-          throw new Error(err.message);
-        });
-      setActName({ title: data.title });
-      // return data;
-    };
-    getDetailAct();
-  }, []);
+  const getDetailAct = async () => {
+    const data = await services["getDetailActivity"](id)
+      .then(async (response) => {
+        console.log(response.data);
+        return response.data
+      })
+      .catch(async (err) => {
+        throw new Error(err.message);
+      });
+    setActName({ title: data.title });
+    return data;
+  };
 
   const updateDetailAct = async () => {
     await services["updateDetailAct"](id, actName)
@@ -103,28 +99,20 @@ const DetailActivity = () => {
     // return data;
   };
 
-  // const { isLoadingUpdate, mutate: mutateUpdate } =
-  //   useMutation(updateDetailAct);
-  // const { isLoadingDelete, mutate: mutateDelete } = useMutation(deleteToDo, {
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries("detailAct");
-  //   },
-  // });
+  const { isLoadingUpdate, mutate: mutateUpdate } =
+    useMutation(updateDetailAct);
+  const { isLoadingDelete, mutate: mutateDelete } = useMutation(deleteToDo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("detailAct");
+    },
+  });
 
-  // const {
-  //   data,
-  //   // isError: isErrorDetail,
-  //   // isLoading: isLoadingDetail,
-  //   // isFetching: isFetchingDetail,
-  //   isSuccess,
-  // } = useQuery("detailAct", getDetailAct);
+  const {
+    data,
+    isSuccess,
+  } = useQuery("detailAct", getDetailAct);
   const [flagFilter, setFlagFilter] = useState("");
-  // const [item, setItem] = useState({});
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     setItem(data);
-  //   }
-  // }, [isSuccess]);
+
 
   const { filteredData, onSearch } = useFilter(data, flagFilter);
   const actNameHandler = (event) => {
@@ -132,7 +120,7 @@ const DetailActivity = () => {
   };
 
   const submitActNameHandler = () => {
-    // mutateUpdate();
+    mutateUpdate();
     setIsClicked((current) => !current);
   };
 
@@ -143,7 +131,7 @@ const DetailActivity = () => {
   const modalEditHandler = async (data) => {
     await setSelectedData(data);
     await onOpenEdit();
-    console.log(data);
+    // console.log(data);
   };
   // console.log(selectedData);
 
@@ -157,7 +145,7 @@ const DetailActivity = () => {
       confirmButtonText: "Hapus",
     }).then((result) => {
       if (result.isConfirmed) {
-        // mutateDelete(item.id);
+        mutateDelete(item.id);
         toast({
           render: () => (
             <HStack
@@ -180,7 +168,7 @@ const DetailActivity = () => {
   };
 
   return (
-    Object.keys(data).length !== 0 && (
+    isSuccess && (
       <div data-cy="detail-state-activity">
         <Header />
         <VStack

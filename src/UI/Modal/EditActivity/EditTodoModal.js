@@ -26,27 +26,25 @@ const options = [
   { value: "Very Low", text: "very-low", color: "#B01AFF" },
 ];
 const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
-  // console.log(selectedData);
+  // console.log(selectedData.title);
   const [data, setData] = useState({
     title: selectedData.title,
     is_active: selectedData.is_active,
     priority: selectedData.priority,
   });
+  const [title, setTitle] = useState(selectedData.title)
+  console.log(title)
   let selectedIsActive = options.findIndex((option) => {
     return option.text === selectedData.priority;
   });
-  console.log(selectedIsActive);
-  // console.log(data)
-  // const [data, setData] = useState({
 
-  // })
-  // console.log(selectedData)
   const [selectedOption, setSelectedOption] = useState(null);
-  const handleChange = (e) => {
-    setSelectedOption(e);
+  const handleChange = (event) => {
+    setSelectedOption(event);
   };
   const itemNameHandler = (event) => {
-    setData({ ...data, title: event.target.value });
+    // setData({ ...data, title: event.target.value });
+    setTitle(event.target.value)
   };
 
   return (
@@ -55,13 +53,13 @@ const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit List Item</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton/>
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel fontSize={"xs"} fontWeight={"bold"}>
                 NAMA LIST ITEM
               </FormLabel>
-              <Input value={selectedData.title} onChange={itemNameHandler} />
+              <Input value={data.title} onChange={itemNameHandler} type='text'/>
             </FormControl>
 
             <FormControl mt={4}>

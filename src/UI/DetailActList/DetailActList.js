@@ -9,7 +9,7 @@ import { services } from "../../utilities/service";
 
 const DetailActList = (props) => {
   const {swal, item, modalEditHandler} = props 
-//   const [isActive, setIsActive] = useState(item.is_active); 
+  const [isActive, setIsActive] = useState(item.is_active); 
   const [datas, setData] = useState({
         title:item.title,
         is_active:item.is_active,
@@ -29,7 +29,7 @@ const DetailActList = (props) => {
   const {isLoadingUpdate, mutate} = useMutation(updateDetailToDo)
 
   const isActiveHandler = async () => {
-    // await setIsActive(!isActive);
+    await setIsActive(!isActive);
     await setData({...datas,
         is_active:!datas.is_active})
     mutate()
