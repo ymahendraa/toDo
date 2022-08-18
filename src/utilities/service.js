@@ -111,4 +111,10 @@ export const services = {
     api.deletePost(
       `https://todo.api.devcode.gethired.id/activity-groups/${params}`
     ),
+    deleteToDo: (params) =>
+    api.deletePost(
+      ` https://todo.api.devcode.gethired.id/todo-items/${params}`
+    ),
+
+   
 };

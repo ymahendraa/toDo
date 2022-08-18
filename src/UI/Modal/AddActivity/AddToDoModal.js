@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { GoPrimitiveDot } from "react-icons/go";
 import Select from "react-select";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { services } from "../../../utilities/service";
 
 
@@ -29,6 +29,7 @@ const options = [
 const AddToDoModal = ({ onClose, isOpen, id }) => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [toDoName, setToDoName] = useState("")
+  const queryClient = new useQueryClient()
   const [data, setData] = useState({
     activity_group_id:id,
     title:toDoName,
@@ -49,7 +50,10 @@ const AddToDoModal = ({ onClose, isOpen, id }) => {
       });
     // return data;
   };
-  const {mutate:mutateCreate, isLoading:isLoadingCreate} = useMutation(postNewToDo); 
+  const {mutate:mutateCreate, isLoading:isLoadingCreate} = useMutation(postNewToDo, {
+    onSuccess: () =>  {queryClient.invalidateQueries('detailAct')}
+  }
+    ); 
   const submitHandler = async () => {
     await setData({...data, priority:selectedOption.text, title:toDoName})
     await mutateCreate()

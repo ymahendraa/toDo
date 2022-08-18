@@ -74,7 +74,7 @@ const DetailActList = (props) => {
           h={6}
           color={"blackAlpha.500"}
           cursor={"pointer"}
-          onClick={swal}
+          onClick={()=>swal(item)}
         />
       </HStack>
     </div>

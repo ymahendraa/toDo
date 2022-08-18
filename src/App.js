@@ -1,5 +1,5 @@
 import DetailActivity from "./pages/Detail Activity/DetailActivity";
-import HomeScreen from "./pages/home/Home";
+import HomeScreen from "./pages/Home/Home";
 import Header from "./UI/Header/Header";
 import {Routes, Route, BrowserRouter} from 'react-router-dom'
 function App() {

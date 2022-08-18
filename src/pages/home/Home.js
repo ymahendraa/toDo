@@ -15,7 +15,7 @@ import styled from "./Home.module.css";
 import emptyImg from "../../img/activity-empty-state.png";
 import { IoAddOutline } from "react-icons/io5";
 import ActivityCard from "../../UI/ActivityCard/ActivityCard";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient, QueryClient } from "react-query";
 import { services } from "../../utilities/service";
 import Header from "../../UI/Header/Header";
 import Swal from "sweetalert2";
@@ -24,6 +24,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 const HomeScreen = () => {
   const [id, setID] = useState(null)
   const toast = useToast();
+  const queryClient = new useQueryClient();
 
   const swalHandler = (item) => {
     Swal.fire({
@@ -89,7 +90,7 @@ const HomeScreen = () => {
   };
 
   const deleteAct = async () => {
-    const data = await services["deleteAct"](id)
+    await services["deleteAct"](id)
       .then(async (response) => {
         // console.log(response.data);
         return response.data;
@@ -97,7 +98,6 @@ const HomeScreen = () => {
       .catch(async (err) => {
         throw new Error(err.message);
       });
-    return data;
   }; 
 
   const { data, isError, isLoading, isFetching, isSuccess } = useQuery(
@@ -105,12 +105,15 @@ const HomeScreen = () => {
     getDataActivities
   );
 
-  const {mutate:mutateCreate, isLoading:isLoadingCreate} = useMutation(postNewActivities); 
-  const {mutate:mutateDelete, isLoading:isLoadingDelete} = useMutation(deleteAct); 
+  const {mutate:mutateCreate, isLoading:isLoadingCreate} = useMutation(postNewActivities, {
+    onSuccess: () => {queryClient.invalidateQueries('activities')}
+  }); 
+  const {mutate:mutateDelete, isLoading:isLoadingDelete} = useMutation(deleteAct, {
+    onSuccess: () => {queryClient.invalidateQueries('activities')}
+  }); 
 
   const deleteHandler = async (ID) => {
     await setID(ID)
-    console.log(ID)
     await mutateDelete()
   }
   return (
