@@ -1,3 +1,5 @@
+/** @format */
+
 import { useState } from "react";
 import {
   Modal,
@@ -16,23 +18,27 @@ import {
 import { GoPrimitiveDot } from "react-icons/go";
 import Select from "react-select";
 
-
-
 const options = [
-    { value: 1, text: "Very high", color: "#ED4C5C" },
-    { value: 2, text: "High", color: "#FFCE31" },
-    { value: 3, text: "Medium", color: "#00A790" },
-    { value: 4, text: "Low", color: "#43C4E3" },
-    { value: 5, text: "Very Low", color: "#B01AFF" },
-  ];
+  { value: "Very High", text: "very-high", color: "#ED4C5C" },
+  { value: "High", text: "high", color: "#FFCE31" },
+  { value: "Medium", text: "normal", color: "#00A790" },
+  { value: "Low", text: "low", color: "#43C4E3" },
+  { value: "Very Low", text: "very-low", color: "#B01AFF" },
+];
 const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
-  const [data, setData] = useState(
-    {title:selectedData.title,
-    is_active:selectedData.is_active,
-    priority:selectedData.priority})
-    console.log(data)
+  // console.log(selectedData);
+  const [data, setData] = useState({
+    title: selectedData.title,
+    is_active: selectedData.is_active,
+    priority: selectedData.priority,
+  });
+  let selectedIsActive = options.findIndex((option) => {
+    return option.text === selectedData.priority;
+  });
+  console.log(selectedIsActive);
+  // console.log(data)
   // const [data, setData] = useState({
-    
+
   // })
   // console.log(selectedData)
   const [selectedOption, setSelectedOption] = useState(null);
@@ -40,8 +46,9 @@ const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
     setSelectedOption(e);
   };
   const itemNameHandler = (event) => {
-    setData({...data, title:event.target.value})
-  }
+    setData({ ...data, title: event.target.value });
+  };
+
   return (
     <div data-cy="edit-activity-modal">
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -51,24 +58,28 @@ const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel fontSize={"xs"} fontWeight={'bold'}>NAMA LIST ITEM</FormLabel>
-              <Input value={data.title} onChange={itemNameHandler}/>
+              <FormLabel fontSize={"xs"} fontWeight={"bold"}>
+                NAMA LIST ITEM
+              </FormLabel>
+              <Input value={selectedData.title} onChange={itemNameHandler} />
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel fontSize={"xs"} fontWeight={'bold'}>PRIORITY</FormLabel>
+              <FormLabel fontSize={"xs"} fontWeight={"bold"}>
+                PRIORITY
+              </FormLabel>
               <Select
                 // placeholder={e[0].label}
                 components={{
-                    IndicatorSeparator: () => null
-                  }}
-                value={selectedOption}
+                  IndicatorSeparator: () => null,
+                }}
+                value={options[selectedIsActive]}
                 options={options}
                 onChange={handleChange}
                 getOptionLabel={(e) => (
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <Icon as={GoPrimitiveDot} color={e.color}/>
-                    <span style={{ marginLeft: 5 }}>{e.text}</span>
+                    <Icon as={GoPrimitiveDot} color={e.color} />
+                    <span style={{ marginLeft: 5 }}>{e.value}</span>
                   </div>
                 )}
                 delimiter={false}

@@ -1,4 +1,6 @@
-import { useState } from "react";
+/** @format */
+
+import { useState, useEffect } from "react";
 import {
   VStack,
   HStack,
@@ -22,10 +24,14 @@ import {
 import toDoEmpty from "../../img/todo-empty-state.png";
 import { IoAddOutline } from "react-icons/io5";
 import { FiChevronLeft } from "react-icons/fi";
-import { BiPencil} from "react-icons/bi";
+import { BiPencil } from "react-icons/bi";
 import { RiArrowUpDownLine } from "react-icons/ri";
-import {BsSortUp, BsSortDown} from 'react-icons/bs'
-import { AiOutlineInfoCircle,AiOutlineSortAscending,AiOutlineSortDescending } from "react-icons/ai";
+import { BsSortUp, BsSortDown } from "react-icons/bs";
+import {
+  AiOutlineInfoCircle,
+  AiOutlineSortAscending,
+  AiOutlineSortDescending,
+} from "react-icons/ai";
 import AddToDoModal from "../../UI/Modal/AddActivity/AddToDoModal";
 import DetailActList from "../../UI/DetailActList/DetailActList";
 import EditToDoModal from "../../UI/Modal/EditActivity/EditTodoModal";
@@ -36,6 +42,7 @@ import { useParams } from "react-router-dom";
 import { services } from "../../utilities/service";
 import Header from "../../UI/Header/Header";
 import { useNavigate } from "react-router-dom";
+import useFilter from "../../hooks/useFilter";
 
 const DetailActivity = () => {
   let navigate = useNavigate();
@@ -55,19 +62,23 @@ const DetailActivity = () => {
   const [selectedData, setSelectedData] = useState({});
   const toast = useToast();
   let { id } = useParams();
+  const [data, setData] = useState({});
 
-  const getDetailAct = async () => {
-    const data = await services["getDetailActivity"](id)
-      .then(async (response) => {
-        // console.log(response.data);
-        return response.data;
-      })
-      .catch(async (err) => {
-        throw new Error(err.message);
-      });
-    setActName({ title: data.title });
-    return data;
-  };
+  useEffect(() => {
+    const getDetailAct = async () => {
+      const data = await services["getDetailActivity"](id)
+        .then(async (response) => {
+          console.log(response.data);
+          setData(response.data);
+        })
+        .catch(async (err) => {
+          throw new Error(err.message);
+        });
+      setActName({ title: data.title });
+      // return data;
+    };
+    getDetailAct();
+  }, []);
 
   const updateDetailAct = async () => {
     await services["updateDetailAct"](id, actName)
@@ -91,28 +102,37 @@ const DetailActivity = () => {
       });
     // return data;
   };
-  const { isLoadingUpdate, mutate: mutateUpdate } =
-    useMutation(updateDetailAct);
-  const { isLoadingDelete, mutate: mutateDelete } = useMutation(deleteToDo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("detailAct");
-    },
-  });
 
-  const {
-    data: dataDetail,
-    isError: isErrorDetail,
-    isLoading: isLoadingDetail,
-    isFetching: isFetchingDetail,
-    isSuccess: isSuccessDetail,
-  } = useQuery("detailAct", getDetailAct);
+  // const { isLoadingUpdate, mutate: mutateUpdate } =
+  //   useMutation(updateDetailAct);
+  // const { isLoadingDelete, mutate: mutateDelete } = useMutation(deleteToDo, {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries("detailAct");
+  //   },
+  // });
 
+  // const {
+  //   data,
+  //   // isError: isErrorDetail,
+  //   // isLoading: isLoadingDetail,
+  //   // isFetching: isFetchingDetail,
+  //   isSuccess,
+  // } = useQuery("detailAct", getDetailAct);
+  const [flagFilter, setFlagFilter] = useState("");
+  // const [item, setItem] = useState({});
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setItem(data);
+  //   }
+  // }, [isSuccess]);
+
+  const { filteredData, onSearch } = useFilter(data, flagFilter);
   const actNameHandler = (event) => {
     setActName({ title: event.target.value });
   };
 
   const submitActNameHandler = () => {
-    mutateUpdate();
+    // mutateUpdate();
     setIsClicked((current) => !current);
   };
 
@@ -125,6 +145,7 @@ const DetailActivity = () => {
     await onOpenEdit();
     console.log(data);
   };
+  // console.log(selectedData);
 
   const swalHandler = (item) => {
     Swal.fire({
@@ -136,7 +157,7 @@ const DetailActivity = () => {
       confirmButtonText: "Hapus",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutateDelete(item.id);
+        // mutateDelete(item.id);
         toast({
           render: () => (
             <HStack
@@ -157,8 +178,9 @@ const DetailActivity = () => {
       }
     });
   };
+
   return (
-    isSuccessDetail && (
+    Object.keys(data).length !== 0 && (
       <div data-cy="detail-state-activity">
         <Header />
         <VStack
@@ -236,11 +258,45 @@ const DetailActivity = () => {
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem><Icon as={BsSortUp} color={'#16ABF8'} w={5}/><span>Terbaru</span> </MenuItem>
-                  <MenuItem><Icon as={BsSortDown} color={'#16ABF8'} w={5}/><span>Terlama</span> </MenuItem>
-                  <MenuItem><Icon as={AiOutlineSortAscending} color={'#16ABF8'} w={5}/><span>A-Z </span> </MenuItem>
-                  <MenuItem><Icon as={AiOutlineSortDescending} color={'#16ABF8'} w={5}/><span>Z-A</span> </MenuItem>
-                  <MenuItem><Icon as={RiArrowUpDownLine} color={'#16ABF8'} w={5}/><span>Belum Selesai</span> </MenuItem>
+                  <MenuItem
+                    onClick={() => setFlagFilter("Terbaru")}
+                    isDisabled={flagFilter === "Terbaru"}
+                  >
+                    <Icon as={BsSortUp} color={"#16ABF8"} w={5} />
+                    <span>Terbaru</span>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => setFlagFilter("Terlama")}
+                    isDisabled={flagFilter === "Terlama"}
+                  >
+                    <Icon as={BsSortDown} color={"#16ABF8"} w={5} />
+                    <span>Terlama</span>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => setFlagFilter("A-Z")}
+                    isDisabled={flagFilter === "A-Z"}
+                  >
+                    <Icon as={AiOutlineSortAscending} color={"#16ABF8"} w={5} />
+                    <span>A-Z </span>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => setFlagFilter("Z-A")}
+                    isDisabled={flagFilter === "Z-A"}
+                  >
+                    <Icon
+                      as={AiOutlineSortDescending}
+                      color={"#16ABF8"}
+                      w={5}
+                    />
+                    <span>Z-A</span>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => setFlagFilter("Belum Selesai")}
+                    isDisabled={flagFilter === "Belum Selesai"}
+                  >
+                    <Icon as={RiArrowUpDownLine} color={"#16ABF8"} w={5} />
+                    <span>Belum Selesai</span>
+                  </MenuItem>
                 </MenuList>
               </Menu>
 
@@ -257,8 +313,22 @@ const DetailActivity = () => {
               </Button>
             </HStack>
           </HStack>
-          {dataDetail.todo_items ? (
-            dataDetail.todo_items.map((todo) => (
+          {!onSearch &&
+            data.todo_items &&
+            data.todo_items.map((todos) => (
+              <DetailActList
+                // onEdit={modalEditHandler}
+                data-cy="detail-list"
+                swal={swalHandler}
+                item={todos}
+                key={todos.id}
+                modalEditHandler={modalEditHandler}
+              />
+            ))}
+
+          {onSearch &&
+            filteredData.todo_items &&
+            filteredData.todo_items.map((todo) => (
               <DetailActList
                 // onEdit={modalEditHandler}
                 data-cy="detail-list"
@@ -267,8 +337,9 @@ const DetailActivity = () => {
                 key={todo.id}
                 modalEditHandler={modalEditHandler}
               />
-            ))
-          ) : (
+            ))}
+
+          {!data.todo_items && !filteredData.todoItems && (
             <img src={toDoEmpty} alt="toDoEmpty" />
           )}
         </VStack>
