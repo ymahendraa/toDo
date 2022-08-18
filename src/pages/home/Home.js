@@ -102,7 +102,7 @@ const HomeScreen = () => {
 
   const { data, isError, isLoading, isFetching, isSuccess } = useQuery(
     "activities",
-    getDataActivities,{refetchInterval:500}
+    getDataActivities,{refetchOnWindowFocus:true}
   );
 
   const {mutate:mutateCreate, isLoading:isLoadingCreate} = useMutation(postNewActivities, {
@@ -126,7 +126,7 @@ const HomeScreen = () => {
           mt={"3rem"}
           mx={'2rem'}
         >
-          <Text color={"#000"} fontSize={"4xl"} fontWeight={"bold"} data-cy="header-title">
+          <Text color={"#000"} fontSize={"4xl"} fontWeight={"bold"} data-cy="activity-title">
             Activity
           </Text>
           <Button
