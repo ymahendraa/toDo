@@ -18,8 +18,7 @@ import Select from "react-select";
 
 
 
-const data = [
-  
+const options = [
     { value: 1, text: "Very high", color: "#ED4C5C" },
     { value: 2, text: "High", color: "#FFCE31" },
     { value: 3, text: "Medium", color: "#00A790" },
@@ -27,6 +26,11 @@ const data = [
     { value: 5, text: "Very Low", color: "#B01AFF" },
   ];
 const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
+  const [data, setData] = useState(
+    {title:selectedData.title,
+    is_active:selectedData.is_active,
+    priority:selectedData.priority})
+    console.log(data)
   // const [data, setData] = useState({
     
   // })
@@ -35,28 +39,31 @@ const EditToDoModal = ({ onClose, isOpen, selectedData }) => {
   const handleChange = (e) => {
     setSelectedOption(e);
   };
+  const itemNameHandler = (event) => {
+    setData({...data, title:event.target.value})
+  }
   return (
     <div data-cy="edit-activity-modal">
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Tambah List Item</ModalHeader>
+          <ModalHeader>Edit List Item</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel fontSize={"xs"}>NAMA LIST ITEM</FormLabel>
-              {/* <Input value={} /> */}
+              <FormLabel fontSize={"xs"} fontWeight={'bold'}>NAMA LIST ITEM</FormLabel>
+              <Input value={data.title} onChange={itemNameHandler}/>
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel fontSize={"xs"}>PRIORITY</FormLabel>
+              <FormLabel fontSize={"xs"} fontWeight={'bold'}>PRIORITY</FormLabel>
               <Select
                 // placeholder={e[0].label}
                 components={{
                     IndicatorSeparator: () => null
                   }}
                 value={selectedOption}
-                options={data}
+                options={options}
                 onChange={handleChange}
                 getOptionLabel={(e) => (
                   <div style={{ display: "flex", alignItems: "center" }}>

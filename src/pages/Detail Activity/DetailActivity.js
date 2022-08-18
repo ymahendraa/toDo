@@ -24,7 +24,7 @@ import { IoAddOutline } from "react-icons/io5";
 import { FiChevronLeft } from "react-icons/fi";
 import { BiPencil} from "react-icons/bi";
 import { RiArrowUpDownLine } from "react-icons/ri";
-import {BsSortUpAlt, BsSortDownAlt} from 'react-icons/bs'
+import {BsSortUp, BsSortDown} from 'react-icons/bs'
 import { AiOutlineInfoCircle,AiOutlineSortAscending,AiOutlineSortDescending } from "react-icons/ai";
 import AddToDoModal from "../../UI/Modal/AddActivity/AddToDoModal";
 import DetailActList from "../../UI/DetailActList/DetailActList";
@@ -236,11 +236,11 @@ const DetailActivity = () => {
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem><span>Terbaru</span> </MenuItem>
-                  <MenuItem><span>Terlama</span> </MenuItem>
-                  <MenuItem><span>A-Z </span> </MenuItem>
-                  <MenuItem><span>Z-A</span> </MenuItem>
-                  <MenuItem><span>Belum Selesai</span> </MenuItem>
+                  <MenuItem><Icon as={BsSortUp} color={'#16ABF8'} w={5}/><span>Terbaru</span> </MenuItem>
+                  <MenuItem><Icon as={BsSortDown} color={'#16ABF8'} w={5}/><span>Terlama</span> </MenuItem>
+                  <MenuItem><Icon as={AiOutlineSortAscending} color={'#16ABF8'} w={5}/><span>A-Z </span> </MenuItem>
+                  <MenuItem><Icon as={AiOutlineSortDescending} color={'#16ABF8'} w={5}/><span>Z-A</span> </MenuItem>
+                  <MenuItem><Icon as={RiArrowUpDownLine} color={'#16ABF8'} w={5}/><span>Belum Selesai</span> </MenuItem>
                 </MenuList>
               </Menu>
 

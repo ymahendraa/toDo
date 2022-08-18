@@ -11,9 +11,9 @@ const DetailActList = (props) => {
   const {swal, item, modalEditHandler} = props 
 //   const [isActive, setIsActive] = useState(item.is_active); 
   const [datas, setData] = useState({
-        title:props.item.title,
-        is_active:props.item.is_active,
-        priority:props.item.priority
+        title:item.title,
+        is_active:item.is_active,
+        priority:item.priority
   })
   const updateDetailToDo = async () => {
     const data = await services["updateToDo"](item.id, datas)
